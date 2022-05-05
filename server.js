@@ -29,3 +29,29 @@ function listening() {
     console.log('Server running');
     console.log(`running at localhost: ${port}`);
 }
+
+// Add GET route
+
+app.get('/all', getProjectData);
+
+function getProjectData(req,res) {
+    res.send(projectData);
+    console.log(`GET responded projectData: ${projectData}`);
+}
+
+// Add POST route
+
+app.post('/addEntry', addPieces);
+
+function addPieces(req,res) {
+
+    newEntry = {
+        temperature: req.body.temperature,
+        date: req.body.date,
+        user_response: req.body.user_response
+    }
+
+    projectData.push(newEntry);
+    res.send(projectData);
+    console.log(`POST responded projectData: ${projectData}`);
+}
