@@ -44,14 +44,14 @@ function getProjectData(req,res) {
 app.post('/addEntry', addPieces);
 
 function addPieces(req,res) {
+    console.log(req)
 
     newEntry = {
-        temperature: req.body.temperature,
+        temp: req.body.temp,
         date: req.body.date,
         user_response: req.body.user_response
     }
 
     projectData.push(newEntry);
     res.send(projectData);
-    console.log(`POST responded projectData: ${projectData}`);
 }
