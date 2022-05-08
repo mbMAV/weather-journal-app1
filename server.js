@@ -32,26 +32,30 @@ function listening() {
 
 // Add GET route
 
-app.get('/all', getProjectData);
+app.get('/all', (req,res) => {
 
-function getProjectData(req,res) {
     res.send(projectData);
-    console.log(`GET responded projectData: ${projectData}`);
-}
+    console.log(`GET responded projectData: ${projectData}`)
+});
 
 // Add POST route
 
-app.post('/addEntry', addPieces);
-
-function addPieces(req,res) {
-    console.log(req)
-
+app.post('/addEntry', (req,res)=> {
+    console.log(projectData);
+    console.log(req.body);
     newEntry = {
         temp: req.body.temp,
         date: req.body.date,
         user_response: req.body.user_response
     }
 
-    projectData.push(newEntry);
-    res.send(projectData);
-}
+    // [
+    //     req.body.temp,
+    //     req.body.date,
+    //     req.body.user_response
+    // ]
+
+    projectData = req.body;
+    console.log(projectData);
+    console.log("the post request is here!")
+});

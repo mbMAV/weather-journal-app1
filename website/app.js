@@ -1,7 +1,7 @@
 /* Global Variables */
 
 // Personal API Key for OpenWeatherMap API
-const key = ""; // place API key here
+const key = "1e78add53d126965882fb3a7701c3d2f"; // place API key here
 const apiKey = `&appid=${key}&units=imperial`;
 const baseURL = 'https://api.openweathermap.org/data/2.5/weather?zip=';
 const country_code = ',de';
@@ -17,13 +17,19 @@ document.getElementById('generate').addEventListener('click', performAction);
 // Get zip code from user input
 function performAction(e){
     const newZip = document.getElementById('zip').value;
-    const user_response = document.getElementById('feelings').value;
+    const user_input = document.getElementById('feelings').value;
     getWeather(baseURL,newZip,country_code,apiKey)
 
     .then(function(data){
-        const date = newDate;
-        console.log(`in .then ${data}`)
-        postData('/addEntry',{temp: data.main.temp, date ,user_response})
+        const date = {date:newDate};
+        const temp = {temp:data.main.temp};
+        const user_response = {user_response:user_input};
+        console.log(`in .then`);
+        console.log(data);
+        console.log(temp);
+        console.log(date);
+        console.log(user_response);
+        postData('/addEntry',{date:newDate, temp:data.main.temp, user_response:user_input});
     });
 }
 
@@ -34,9 +40,9 @@ const getWeather = async (baseURL, newZip, country_code,apiKey)=>{
 
     try {
         const data = await res.json();
-    console.log(data)
+    console.log(data);
 
-    // postData('/addEntry', data)
+    postData('/addEntry', data);
     return data;
 
 }  catch(error) {
@@ -45,11 +51,12 @@ const getWeather = async (baseURL, newZip, country_code,apiKey)=>{
 }
 
 // Make async POST request
-const postData = async ( url = '', data = {})=>{
-    const response = await fetch(url, {
+const postData = async ( url = '', data)=>{
+    const res = await fetch(url, {
     method: 'POST',
     credentials: 'same-origin',
     headers: {
+        Accept: 'application/json',
         'Content-Type': 'application/json'
     },
      // Body data type must match "Content-Type" header
@@ -57,7 +64,7 @@ const postData = async ( url = '', data = {})=>{
     });
 
     try {
-        const newData = await response.json();
+        const newData = await res.json();
         console.log(newData);
         return newData;
     }catch(error) {
