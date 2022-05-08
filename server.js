@@ -35,27 +35,20 @@ function listening() {
 app.get('/all', (req,res) => {
 
     res.send(projectData);
-    console.log(`GET responded projectData: ${projectData}`)
+    console.log(`GET responded projectData:`,projectData);
 });
 
 // Add POST route
 
 app.post('/addEntry', (req,res)=> {
-    console.log(projectData);
-    console.log(req.body);
+
     newEntry = {
         temp: req.body.temp,
         date: req.body.date,
         user_response: req.body.user_response
     }
 
-    // [
-    //     req.body.temp,
-    //     req.body.date,
-    //     req.body.user_response
-    // ]
-
-    projectData = req.body;
+    projectData = newEntry;
     console.log(projectData);
-    console.log("the post request is here!")
+    console.log("the post request is here!");
 });

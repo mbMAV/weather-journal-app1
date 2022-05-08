@@ -1,10 +1,10 @@
 /* Global Variables */
 
 // Personal API Key for OpenWeatherMap API
-const key = "1e78add53d126965882fb3a7701c3d2f"; // place API key here
+const key = ""; // place API key here
 const apiKey = `&appid=${key}&units=imperial`;
 const baseURL = 'https://api.openweathermap.org/data/2.5/weather?zip=';
-const country_code = ',de';
+const country_code = ',us';
 
 
 // Create a new date instance dynamically with JS
@@ -14,9 +14,11 @@ let newDate = d.getMonth()+1+'.'+ d.getDate()+'.'+ d.getFullYear();
 // Add event listener at the generate button
 document.getElementById('generate').addEventListener('click', performAction);
 
-// Get zip code from user input
+
 function performAction(e){
+    // Get zip code from user input
     const newZip = document.getElementById('zip').value;
+    // Get feelings from user input
     const user_input = document.getElementById('feelings').value;
     getWeather(baseURL,newZip,country_code,apiKey)
 
@@ -24,13 +26,17 @@ function performAction(e){
         const date = {date:newDate};
         const temp = {temp:data.main.temp};
         const user_response = {user_response:user_input};
-        console.log(`in .then`);
-        console.log(data);
-        console.log(temp);
-        console.log(date);
-        console.log(user_response);
+        // console.log(`in .then`);
+        // console.log(data);
+        // console.log(temp);
+        // console.log(date);
+        // console.log(user_response);
         postData('/addEntry',{date:newDate, temp:data.main.temp, user_response:user_input});
-    });
+    })
+
+    .then(function() {
+        getData('/all');
+    })
 }
 
 // Make async API request at openweathermap.org
@@ -40,7 +46,7 @@ const getWeather = async (baseURL, newZip, country_code,apiKey)=>{
 
     try {
         const data = await res.json();
-    console.log(data);
+        // console.log(data);
 
     postData('/addEntry', data);
     return data;
@@ -67,6 +73,23 @@ const postData = async ( url = '', data)=>{
         const newData = await res.json();
         console.log(newData);
         return newData;
+
+    }catch(error) {
+    console.log("error", error);
+    }
+}
+
+// Make async GET request
+const getData = async () => {
+    const request = await fetch('/all')
+    try{
+        const allData = await request.json();
+        console.log("allData is:", allData);
+//  Update DOM elements
+        document.getElementById('temp').innerHTML = Math.round(allData.temp)+ ' degrees';
+        document.getElementById('content').innerText = allData.user_response;
+        document.getElementById('date').innerHTML = allData.date;
+
     }catch(error) {
     console.log("error", error);
     }
